@@ -3,99 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Albert Heijn Self-Scanner Simulator</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-        }
-        .ah-header {
-            background-color: #003082;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        .scanner-area {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            max-width: 400px;
-            margin: 0 auto;
-        }
-        .btn {
-            background-color: #003082;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-            margin: 10px 0;
-        }
-        .btn:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <title>Albert Heijn Zelfscanner Simulatie</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="ah-header">
-        <h1>🛒 Albert Heijn Self-Scanner</h1>
-        <p>Zelf scannen, makkelijk betalen!</p>
-    </div>
-    
-    <div class="scanner-area">
-        <h2>Scanner Interface</h2>
-        <p>Scan je producten of kies "Lees van scanner" voor een test bon.</p>
-        
-        <button class="btn" onclick="startScanning()">🔍 Start Scannen</button>
-        <button class="btn" onclick="generateRandomReceipt()">📄 Lees van Scanner</button>
-        
-        <div id="output" style="margin-top: 20px; padding: 10px; background: #f0f0f0; border-radius: 4px; display: none;">
-            <h3>Test Resultaten:</h3>
-            <p id="results"></p>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-text">Albert Heijn</span>
+                    <span class="logo-subtitle">Zelfscanner</span>
+                </div>
+                <div class="cart-summary">
+                    <span class="cart-count" id="cartCount">0</span>
+                    <span class="cart-total" id="cartTotal">€0,00</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <div class="scanner-interface">
+                <div class="scanner-section">
+                    <h2>Product Scannen</h2>
+                    <div class="scan-area">
+                        <div class="barcode-input">
+                            <input type="text" id="barcodeInput" placeholder="Scan product of voer barcode in..." autocomplete="off">
+                            <button id="scanButton" class="scan-btn">Scan</button>
+                        </div>
+                        <div class="scan-actions">
+                            <button id="randomReceiptBtn" class="random-receipt-btn">Lees van Scanner</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-display" id="productDisplay" style="display: none;">
+                    <div class="product-info">
+                        <img id="productImage" src="" alt="Product" class="product-image">
+                        <div class="product-details">
+                            <h3 id="productName"></h3>
+                            <p id="productDescription"></p>
+                            <div class="product-price" id="productPrice"></div>
+                        </div>
+                    </div>
+                    <div class="product-actions">
+                        <button id="addToCartBtn" class="add-to-cart-btn">Toevoegen aan Winkelwagen</button>
+                        <button id="skipProductBtn" class="skip-btn">Overslaan</button>
+                    </div>
+                </div>
+
+                <div class="cart-section">
+                    <h2>Winkelwagen</h2>
+                    <div class="cart-items" id="cartItems">
+                        <p class="empty-cart">Uw winkelwagen is leeg</p>
+                    </div>
+                    <div class="cart-total-section">
+                        <div class="total-line">
+                            <span>Subtotaal:</span>
+                            <span id="subtotal">€0,00</span>
+                        </div>
+                        <div class="total-line total-final">
+                            <span>Totaal:</span>
+                            <span id="finalTotal">€0,00</span>
+                        </div>
+                    </div>
+                    <button id="checkoutBtn" class="checkout-btn" disabled>Afrekenen</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Receipt Modal -->
+    <div id="receiptModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Digitale Bon</h2>
+                <button class="close-btn" id="closeReceipt">&times;</button>
+            </div>
+            <div class="receipt" id="receipt">
+                <!-- Receipt content will be dynamically generated -->
+            </div>
+            <div class="modal-actions">
+                <button id="printReceiptBtn" class="print-btn">Print Bon</button>
+                <button id="newShoppingBtn" class="new-shopping-btn">Nieuwe Boodschappen</button>
+            </div>
         </div>
     </div>
 
-    <script>
-        function startScanning() {
-            const output = document.getElementById('output');
-            const results = document.getElementById('results');
-            
-            results.innerHTML = '✅ Scanner functionaliteit geactiveerd!<br>📱 Interface reageert correct op touch events.';
-            output.style.display = 'block';
-        }
-        
-        function generateRandomReceipt() {
-            const output = document.getElementById('output');
-            const results = document.getElementById('results');
-            
-            const products = [
-                'AH Melk Halfvol - €1.25',
-                'AH Brood Volkoren - €1.89',
-                'Bananen per kg - €2.15',
-                'AH Kaas Jong Belegen - €4.50'
-            ];
-            
-            const randomProducts = products.slice(0, Math.floor(Math.random() * 3) + 2);
-            const total = randomProducts.reduce((sum, product) => {
-                const price = parseFloat(product.match(/€(\d+\.\d+)/)[1]);
-                return sum + price;
-            }, 0);
-            
-            results.innerHTML = `
-                <strong>🧾 Test Digitale Bon:</strong><br>
-                ${randomProducts.join('<br>')}
-                <br><br>
-                <strong>Totaal: €${total.toFixed(2)}</strong>
-            `;
-            output.style.display = 'block';
-        }
-    </script>
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Betaling</h2>
+                <button class="close-btn" id="closePayment">&times;</button>
+            </div>
+            <div class="payment-options">
+                <h3>Selecteer betaalmethode:</h3>
+                <div class="payment-methods">
+                    <button class="payment-method" data-method="pin">
+                        <span class="payment-icon">💳</span>
+                        <span>Pinnen</span>
+                    </button>
+                    <button class="payment-method" data-method="contactless">
+                        <span class="payment-icon">📱</span>
+                        <span>Contactloos</span>
+                    </button>
+                    <button class="payment-method" data-method="cash">
+                        <span class="payment-icon">💵</span>
+                        <span>Contant</span>
+                    </button>
+                </div>
+            </div>
+            <div class="payment-amount">
+                <div class="amount-display">
+                    <span>Te betalen: </span>
+                    <span id="paymentAmount">€0,00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="products.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
