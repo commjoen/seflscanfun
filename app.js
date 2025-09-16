@@ -9,6 +9,7 @@ class SelfScannerApp {
     init() {
         this.bindEvents();
         this.updateCartDisplay();
+        this.initProductCatalog();
         this.focusBarcodeInput();
     }
 
@@ -89,6 +90,42 @@ class SelfScannerApp {
         // Sound toggle
         document.getElementById('soundToggle').addEventListener('click', () => {
             this.toggleSound();
+        });
+
+        // Product catalog search and filter
+        document.getElementById('productSearch').addEventListener('input', () => {
+            this.filterProducts();
+        });
+
+        document.getElementById('categoryFilter').addEventListener('change', () => {
+            this.filterProducts();
+        });
+
+        // Payment modal events
+        document.querySelectorAll('.payment-method').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                window.soundManager?.playClickSound('button');
+                const method = e.currentTarget.dataset.method;
+                this.processPayment(method);
+            });
+        });
+
+        // Modal close events
+        document.getElementById('closePayment').addEventListener('click', () => {
+            this.closeModal('paymentModal');
+        });
+
+        document.getElementById('closeReceipt').addEventListener('click', () => {
+            this.closeModal('receiptModal');
+        });
+
+        // Receipt actions
+        document.getElementById('printReceiptBtn').addEventListener('click', () => {
+            this.printReceipt();
+        });
+
+        document.getElementById('newShoppingBtn').addEventListener('click', () => {
+            this.startNewShopping();
         });
     }
 
@@ -469,6 +506,113 @@ class SelfScannerApp {
             hour12: false
         };
         return date.toLocaleDateString('nl-NL', options).replace(',', '');
+    }
+
+    // Product Catalog Methods
+    initProductCatalog() {
+        this.populateCategoryFilter();
+        this.renderProductCatalog();
+    }
+
+    populateCategoryFilter() {
+        const categoryFilter = document.getElementById('categoryFilter');
+        const categories = getAllCategories();
+        
+        // Clear existing options except "Alle categorieën"
+        while (categoryFilter.children.length > 1) {
+            categoryFilter.removeChild(categoryFilter.lastChild);
+        }
+        
+        // Add category options
+        categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category;
+            option.textContent = category;
+            categoryFilter.appendChild(option);
+        });
+    }
+
+    renderProductCatalog(filteredProducts = null) {
+        const productGrid = document.getElementById('productGrid');
+        const productsToShow = filteredProducts || this.getAllProductsArray();
+        
+        productGrid.innerHTML = productsToShow.map(product => this.renderProductCard(product)).join('');
+        
+        // Bind click events to product cards
+        this.bindProductCardEvents();
+    }
+
+    getAllProductsArray() {
+        return Object.entries(PRODUCTS_DATABASE).map(([barcode, product]) => ({
+            barcode,
+            ...product
+        }));
+    }
+
+    renderProductCard(product) {
+        return `
+            <div class="product-card" data-barcode="${product.barcode}">
+                <span class="product-card-image">${product.image}</span>
+                <div class="product-card-name">${product.name}</div>
+                <div class="product-card-description">${product.description}</div>
+                <div class="product-card-price">${this.formatPrice(product.price)}</div>
+                <div class="product-card-category">${product.category}</div>
+            </div>
+        `;
+    }
+
+    bindProductCardEvents() {
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                window.soundManager?.playClickSound('button');
+                const barcode = e.currentTarget.dataset.barcode;
+                this.addProductToCartByBarcode(barcode);
+            });
+        });
+    }
+
+    addProductToCartByBarcode(barcode) {
+        const product = findProductByBarcode(barcode);
+        if (!product) return;
+
+        const existingItem = this.cart.find(item => item.barcode === barcode);
+        
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            this.cart.push({
+                barcode,
+                ...product,
+                quantity: 1
+            });
+        }
+
+        this.updateCartDisplay();
+        this.showMessage(`${product.name} toegevoegd aan winkelwagen`, 'success');
+    }
+
+    filterProducts() {
+        const searchTerm = document.getElementById('productSearch').value.toLowerCase();
+        const selectedCategory = document.getElementById('categoryFilter').value;
+        
+        let filteredProducts = this.getAllProductsArray();
+        
+        // Filter by search term
+        if (searchTerm) {
+            filteredProducts = filteredProducts.filter(product =>
+                product.name.toLowerCase().includes(searchTerm) ||
+                product.description.toLowerCase().includes(searchTerm)
+            );
+        }
+        
+        // Filter by category
+        if (selectedCategory) {
+            filteredProducts = filteredProducts.filter(product =>
+                product.category === selectedCategory
+            );
+        }
+        
+        this.renderProductCatalog(filteredProducts);
     }
 }
 
