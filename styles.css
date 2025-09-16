@@ -72,6 +72,44 @@ body {
     border-radius: var(--border-radius);
 }
 
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.sound-toggle {
+    background: none;
+    border: none;
+    color: var(--ah-white);
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sound-toggle:hover {
+    background-color: var(--ah-dark-blue);
+}
+
+.sound-toggle.disabled {
+    opacity: 0.5;
+}
+
+.sound-toggle.disabled .sound-icon::after {
+    content: '🔇';
+    position: absolute;
+}
+
+.sound-toggle.disabled .sound-icon {
+    position: relative;
+    opacity: 0;
+}
+
 .cart-count {
     font-size: 0.9rem;
     opacity: 0.9;
