@@ -16,53 +16,64 @@ class SelfScannerApp {
         // Barcode scanning
         document.getElementById('barcodeInput').addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
+                window.soundManager?.playClickSound('scan');
                 this.scanProduct();
             }
         });
 
         document.getElementById('scanButton').addEventListener('click', () => {
+            window.soundManager?.playClickSound('button');
             this.scanProduct();
         });
 
         // Random receipt feature
         document.getElementById('randomReceiptBtn').addEventListener('click', () => {
+            window.soundManager?.playClickSound('button');
             this.generateRandomReceipt();
         });
 
         // Product actions
         document.getElementById('addToCartBtn').addEventListener('click', () => {
+            window.soundManager?.playClickSound('success');
             this.addCurrentProductToCart();
         });
 
         document.getElementById('skipProductBtn').addEventListener('click', () => {
+            window.soundManager?.playClickSound('button');
             this.skipCurrentProduct();
         });
 
         // Checkout
         document.getElementById('checkoutBtn').addEventListener('click', () => {
+            window.soundManager?.playClickSound('button');
             this.startCheckout();
         });
 
         // Modal controls
         document.getElementById('closeReceipt').addEventListener('click', () => {
+            window.soundManager?.playClickSound('button');
             this.closeModal('receiptModal');
         });
 
         document.getElementById('closePayment').addEventListener('click', () => {
+            window.soundManager?.playClickSound('button');
             this.closeModal('paymentModal');
         });
 
         document.getElementById('printReceiptBtn').addEventListener('click', () => {
+            window.soundManager?.playClickSound('button');
             this.printReceipt();
         });
 
         document.getElementById('newShoppingBtn').addEventListener('click', () => {
+            window.soundManager?.playClickSound('success');
             this.startNewShopping();
         });
 
         // Payment methods
         document.querySelectorAll('.payment-method').forEach(button => {
             button.addEventListener('click', (e) => {
+                window.soundManager?.playClickSound('payment');
                 const method = e.currentTarget.dataset.method;
                 this.processPayment(method);
             });
@@ -73,6 +84,11 @@ class SelfScannerApp {
             if (e.target.classList.contains('modal')) {
                 this.closeModal(e.target.id);
             }
+        });
+
+        // Sound toggle
+        document.getElementById('soundToggle').addEventListener('click', () => {
+            this.toggleSound();
         });
     }
 
@@ -99,9 +115,11 @@ class SelfScannerApp {
             const product = findProductByBarcode(barcode);
             
             if (product) {
+                window.soundManager?.playClickSound('success');
                 this.displayProduct(barcode, product);
                 this.showMessage(`Product gevonden: ${product.name}`, 'success');
             } else {
+                window.soundManager?.playClickSound('error');
                 this.showMessage('Product niet gevonden. Probeer een andere barcode.', 'error');
                 this.hideProductDisplay();
             }
@@ -251,6 +269,7 @@ class SelfScannerApp {
         // Quantity buttons
         document.querySelectorAll('.quantity-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
+                window.soundManager?.playClickSound('button');
                 const barcode = e.target.dataset.barcode;
                 const change = parseInt(e.target.dataset.change);
                 this.updateQuantity(barcode, change);
@@ -260,6 +279,7 @@ class SelfScannerApp {
         // Remove buttons
         document.querySelectorAll('.remove-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
+                window.soundManager?.playClickSound('button');
                 const barcode = e.target.dataset.barcode;
                 this.removeFromCart(barcode);
             });
@@ -420,6 +440,23 @@ class SelfScannerApp {
 
     formatPrice(price) {
         return `€${price.toFixed(2).replace('.', ',')}`;
+    }
+
+    toggleSound() {
+        const isEnabled = window.soundManager?.toggle();
+        const soundToggle = document.getElementById('soundToggle');
+        const soundIcon = soundToggle.querySelector('.sound-icon');
+        
+        if (isEnabled) {
+            soundToggle.classList.remove('disabled');
+            soundIcon.textContent = '🔊';
+            soundToggle.title = 'Geluid uitschakelen';
+            window.soundManager?.playClickSound('button');
+        } else {
+            soundToggle.classList.add('disabled');
+            soundIcon.textContent = '🔇';
+            soundToggle.title = 'Geluid inschakelen';
+        }
     }
 
     formatDateTime(date) {
