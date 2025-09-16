@@ -39,6 +39,7 @@
                         <div class="barcode-input">
                             <input type="text" id="barcodeInput" placeholder="Scan product of voer barcode in..." autocomplete="off">
                             <button id="scanButton" class="scan-btn">Scan</button>
+                            <button id="cameraButton" class="camera-btn" title="Scan met camera">📷</button>
                         </div>
                         <div class="scan-actions">
                             <button id="randomReceiptBtn" class="random-receipt-btn">Lees van Scanner</button>
@@ -132,6 +133,32 @@
         </div>
     </div>
 
+    <!-- Camera Scanner Modal -->
+    <div id="cameraModal" class="modal">
+        <div class="modal-content camera-modal-content">
+            <div class="modal-header">
+                <h2>Camera Scanner</h2>
+                <button class="close-btn" id="closeCamera">&times;</button>
+            </div>
+            <div class="camera-container">
+                <div id="cameraStatus" class="camera-status">
+                    <p>Richt uw camera op een barcode...</p>
+                </div>
+                <div id="cameraView" class="camera-view">
+                    <video id="cameraVideo" autoplay muted playsinline></video>
+                    <div class="scanner-overlay">
+                        <div class="scanner-line"></div>
+                    </div>
+                </div>
+                <div class="camera-controls">
+                    <button id="startCamera" class="camera-control-btn">Start Camera</button>
+                    <button id="stopCamera" class="camera-control-btn" style="display: none;">Stop Camera</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/quagga@0.12.1/dist/quagga.min.js"></script>
     <script src="products.js"></script>
     <script src="sounds.js"></script>
     <script src="app.js"></script>

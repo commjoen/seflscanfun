@@ -200,6 +200,25 @@
             runner.assert(dutchProductsFound > 0, 'Should have products with Dutch names/descriptions');
         });
 
+        // Camera functionality tests
+        runner.test('Camera button should exist in HTML', () => {
+            const html = document.documentElement.outerHTML;
+            runner.assert(html.includes('cameraButton'), 'Should have camera button element');
+            runner.assert(html.includes('📷'), 'Should have camera icon');
+        });
+
+        runner.test('Camera modal should exist in HTML', () => {
+            const html = document.documentElement.outerHTML;
+            runner.assert(html.includes('cameraModal'), 'Should have camera modal element');
+            runner.assert(html.includes('Camera Scanner'), 'Should have camera scanner text');
+            runner.assert(html.includes('Start Camera'), 'Should have start camera button');
+        });
+
+        runner.test('QuaggaJS library should be included', () => {
+            const html = document.documentElement.outerHTML;
+            runner.assert(html.includes('quagga'), 'Should include QuaggaJS library');
+        });
+
         // Run all tests when page loads
         document.addEventListener('DOMContentLoaded', () => {
             runner.run();

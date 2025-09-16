@@ -3,6 +3,7 @@ class SelfScannerApp {
     constructor() {
         this.cart = [];
         this.currentProduct = null;
+        this.cameraStream = null;
         this.init();
     }
 
@@ -24,6 +25,12 @@ class SelfScannerApp {
         document.getElementById('scanButton').addEventListener('click', () => {
             window.soundManager?.playClickSound('button');
             this.scanProduct();
+        });
+
+        // Camera scanning
+        document.getElementById('cameraButton').addEventListener('click', () => {
+            window.soundManager?.playClickSound('button');
+            this.openCameraScanner();
         });
 
         // Random receipt feature
@@ -77,6 +84,22 @@ class SelfScannerApp {
                 const method = e.currentTarget.dataset.method;
                 this.processPayment(method);
             });
+        });
+
+        // Camera scanner controls
+        document.getElementById('closeCamera').addEventListener('click', () => {
+            window.soundManager?.playClickSound('button');
+            this.closeCameraScanner();
+        });
+
+        document.getElementById('startCamera').addEventListener('click', () => {
+            window.soundManager?.playClickSound('button');
+            this.startCamera();
+        });
+
+        document.getElementById('stopCamera').addEventListener('click', () => {
+            window.soundManager?.playClickSound('button');
+            this.stopCamera();
         });
 
         // Close modals when clicking outside
@@ -436,6 +459,169 @@ class SelfScannerApp {
                 messageEl.style.display = 'none';
             }
         }, 3000);
+    }
+
+    // Camera Scanner Methods
+    openCameraScanner() {
+        // Check if camera is supported
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            this.showMessage('Camera wordt niet ondersteund op dit apparaat', 'error');
+            return;
+        }
+
+        this.showModal('cameraModal');
+        this.updateCameraStatus('Klik "Start Camera" om te beginnen met scannen');
+    }
+
+    closeCameraScanner() {
+        this.stopCamera();
+        this.closeModal('cameraModal');
+    }
+
+    async startCamera() {
+        try {
+            const startBtn = document.getElementById('startCamera');
+            const stopBtn = document.getElementById('stopCamera');
+            const video = document.getElementById('cameraVideo');
+            
+            startBtn.disabled = true;
+            this.updateCameraStatus('Camera wordt gestart...');
+            
+            // Request camera access
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: 'environment', // Use rear camera if available
+                    width: { ideal: 640 },
+                    height: { ideal: 480 }
+                }
+            });
+            
+            video.srcObject = stream;
+            this.cameraStream = stream;
+            
+            // Start barcode scanning
+            this.initializeQuagga();
+            
+            startBtn.style.display = 'none';
+            stopBtn.style.display = 'block';
+            this.updateCameraStatus('Richt uw camera op een barcode...');
+            
+        } catch (error) {
+            console.error('Camera error:', error);
+            this.updateCameraStatus('Kan camera niet starten. Controleer toestemmingen.');
+            document.getElementById('startCamera').disabled = false;
+            
+            let errorMessage = 'Kan camera niet toegang krijgen';
+            if (error.name === 'NotAllowedError') {
+                errorMessage = 'Camera toegang geweigerd. Sta camera toe in browserinstellingen.';
+            } else if (error.name === 'NotFoundError') {
+                errorMessage = 'Geen camera gevonden op dit apparaat.';
+            }
+            this.showMessage(errorMessage, 'error');
+        }
+    }
+
+    stopCamera() {
+        if (this.cameraStream) {
+            this.cameraStream.getTracks().forEach(track => track.stop());
+            this.cameraStream = null;
+        }
+        
+        if (typeof Quagga !== 'undefined') {
+            Quagga.stop();
+        }
+        
+        const startBtn = document.getElementById('startCamera');
+        const stopBtn = document.getElementById('stopCamera');
+        const video = document.getElementById('cameraVideo');
+        
+        video.srcObject = null;
+        startBtn.style.display = 'block';
+        startBtn.disabled = false;
+        stopBtn.style.display = 'none';
+        
+        this.updateCameraStatus('Camera gestopt');
+    }
+
+    initializeQuagga() {
+        const video = document.getElementById('cameraVideo');
+        
+        Quagga.init({
+            inputStream: {
+                name: "Live",
+                type: "LiveStream",
+                target: video,
+                constraints: {
+                    width: 640,
+                    height: 480,
+                    facingMode: "environment"
+                }
+            },
+            locator: {
+                patchSize: "medium",
+                halfSample: true
+            },
+            numOfWorkers: 2,
+            decoder: {
+                readers: [
+                    "code_128_reader",
+                    "ean_reader",
+                    "ean_8_reader", 
+                    "code_39_reader"
+                ]
+            },
+            locate: true
+        }, (err) => {
+            if (err) {
+                console.error('Quagga initialization error:', err);
+                this.updateCameraStatus('Barcode scanner kon niet starten');
+                return;
+            }
+            
+            // Start scanning
+            Quagga.start();
+            
+            // Listen for detected barcodes
+            Quagga.onDetected(this.onBarcodeDetected.bind(this));
+        });
+    }
+
+    onBarcodeDetected(result) {
+        const barcode = result.codeResult.code;
+        
+        // Validate barcode (basic check)
+        if (barcode && barcode.length >= 8) {
+            window.soundManager?.playClickSound('success');
+            this.updateCameraStatus(`Barcode gevonden: ${barcode}`);
+            
+            // Close camera and process the barcode
+            this.stopCamera();
+            this.closeModal('cameraModal');
+            
+            // Process the scanned barcode
+            this.processBarcodeFromCamera(barcode);
+        }
+    }
+
+    processBarcodeFromCamera(barcode) {
+        // Use the existing product lookup logic
+        const product = findProductByBarcode(barcode);
+        
+        if (product) {
+            this.displayProduct(barcode, product);
+            this.showMessage(`Product gevonden via camera: ${product.name}`, 'success');
+        } else {
+            this.showMessage(`Product met barcode ${barcode} niet gevonden`, 'error');
+            // Still fill the input so user can see what was scanned
+            document.getElementById('barcodeInput').value = barcode;
+        }
+    }
+
+    updateCameraStatus(message) {
+        const statusEl = document.getElementById('cameraStatus');
+        if (statusEl) {
+            statusEl.innerHTML = `<p>${message}</p>`;
+        }
     }
 
     formatPrice(price) {
