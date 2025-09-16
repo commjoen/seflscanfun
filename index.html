@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Albert Heijn Self-Scanner Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .ah-header {
+            background-color: #003082;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .scanner-area {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .btn {
+            background-color: #003082;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="ah-header">
+        <h1>🛒 Albert Heijn Self-Scanner</h1>
+        <p>Zelf scannen, makkelijk betalen!</p>
+    </div>
+    
+    <div class="scanner-area">
+        <h2>Scanner Interface</h2>
+        <p>Scan je producten of kies "Lees van scanner" voor een test bon.</p>
+        
+        <button class="btn" onclick="startScanning()">🔍 Start Scannen</button>
+        <button class="btn" onclick="generateRandomReceipt()">📄 Lees van Scanner</button>
+        
+        <div id="output" style="margin-top: 20px; padding: 10px; background: #f0f0f0; border-radius: 4px; display: none;">
+            <h3>Test Resultaten:</h3>
+            <p id="results"></p>
+        </div>
+    </div>
+
+    <script>
+        function startScanning() {
+            const output = document.getElementById('output');
+            const results = document.getElementById('results');
+            
+            results.innerHTML = '✅ Scanner functionaliteit geactiveerd!<br>📱 Interface reageert correct op touch events.';
+            output.style.display = 'block';
+        }
+        
+        function generateRandomReceipt() {
+            const output = document.getElementById('output');
+            const results = document.getElementById('results');
+            
+            const products = [
+                'AH Melk Halfvol - €1.25',
+                'AH Brood Volkoren - €1.89',
+                'Bananen per kg - €2.15',
+                'AH Kaas Jong Belegen - €4.50'
+            ];
+            
+            const randomProducts = products.slice(0, Math.floor(Math.random() * 3) + 2);
+            const total = randomProducts.reduce((sum, product) => {
+                const price = parseFloat(product.match(/€(\d+\.\d+)/)[1]);
+                return sum + price;
+            }, 0);
+            
+            results.innerHTML = `
+                <strong>🧾 Test Digitale Bon:</strong><br>
+                ${randomProducts.join('<br>')}
+                <br><br>
+                <strong>Totaal: €${total.toFixed(2)}</strong>
+            `;
+            output.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
