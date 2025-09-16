@@ -13,7 +13,17 @@ async function runProductTests() {
     
     // Load the test.html file to extract test logic
     const testHtmlPath = path.join(__dirname, 'test.html');
-    const testHtml = fs.readFileSync(testHtmlPath, 'utf8');
+    let testHtml = fs.readFileSync(testHtmlPath, 'utf8');
+    
+    // Load the products.js file separately
+    const productsJsPath = path.join(__dirname, 'products.js');
+    const productsJs = fs.readFileSync(productsJsPath, 'utf8');
+    
+    // Replace the external script tag with inline script content
+    testHtml = testHtml.replace(
+        '<script src="products.js"></script>',
+        `<script>${productsJs}</script>`
+    );
     
     // Create a DOM environment
     const dom = new JSDOM(testHtml, {
@@ -26,10 +36,6 @@ async function runProductTests() {
     global.window = window;
     global.document = window.document;
     global.navigator = window.navigator;
-    
-    // Execute the products code in the DOM context
-    // Note: The test.html already includes products.js, so we don't need to add it again
-    // This prevents "already declared" warnings
     
     // Wait for tests to complete
     await new Promise((resolve) => {
