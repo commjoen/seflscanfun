@@ -191,6 +191,27 @@ body {
     background-color: var(--ah-dark-blue);
 }
 
+.camera-btn {
+    background-color: var(--ah-green);
+    color: var(--ah-white);
+    border: none;
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-left: 0.5rem;
+}
+
+.camera-btn:hover {
+    background-color: #008833;
+}
+
+.camera-btn:disabled {
+    background-color: var(--ah-gray);
+    cursor: not-allowed;
+}
+
 .random-receipt-btn {
     background-color: var(--ah-orange);
     color: var(--ah-white);
@@ -699,6 +720,97 @@ body {
     60%, 100% { content: "..."; }
 }
 
+
+/* Camera Scanner Styles */
+.camera-modal-content {
+    max-width: 600px;
+    width: 90vw;
+}
+
+.camera-container {
+    padding: 1rem 0;
+}
+
+.camera-status {
+    text-align: center;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background-color: var(--ah-light-blue);
+    border-radius: var(--border-radius);
+    color: var(--ah-dark-blue);
+}
+
+.camera-view {
+    position: relative;
+    background-color: #000;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    margin-bottom: 1rem;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#cameraVideo {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+    object-fit: cover;
+}
+
+.scanner-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 250px;
+    height: 100px;
+    border: 2px solid var(--ah-green);
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+.scanner-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--ah-green), transparent);
+    animation: scanLine 2s linear infinite;
+}
+
+@keyframes scanLine {
+    0% { transform: translateY(-50px); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(50px); opacity: 0; }
+}
+
+.camera-controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.camera-control-btn {
+    background-color: var(--ah-blue);
+    color: var(--ah-white);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.camera-control-btn:hover {
+    background-color: var(--ah-dark-blue);
+}
+
+.camera-control-btn:disabled {
+    background-color: var(--ah-gray);
+    cursor: not-allowed;
 /* Product Catalog */
 .product-catalog {
     background-color: var(--ah-white);
