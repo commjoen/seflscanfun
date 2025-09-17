@@ -47,6 +47,11 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+    // Skip unsupported schemes (chrome-extension, chrome-search, etc.)
+    if (!event.request.url.startsWith('http')) {
+        return;
+    }
+    
     event.respondWith(
         caches.match(event.request)
             .then((response) => {
@@ -64,10 +69,16 @@ self.addEventListener('fetch', (event) => {
                     // Clone the response since it can only be consumed once
                     const responseToCache = fetchResponse.clone();
                     
-                    caches.open(CACHE_NAME)
-                        .then((cache) => {
-                            cache.put(event.request, responseToCache);
-                        });
+                    // Only cache http/https requests to avoid chrome-extension errors
+                    if (event.request.url.startsWith('http')) {
+                        caches.open(CACHE_NAME)
+                            .then((cache) => {
+                                cache.put(event.request, responseToCache);
+                            })
+                            .catch((error) => {
+                                console.log('Cache put failed:', error);
+                            });
+                    }
                     
                     return fetchResponse;
                 }).catch(() => {

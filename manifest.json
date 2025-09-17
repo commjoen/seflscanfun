@@ -11,24 +11,16 @@
   "lang": "nl",
   "icons": [
     {
-      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4IiByeD0iOCIgZmlsbD0iIzAwMzA4MiIvPgo8cGF0aCBkPSJNMTIgMTZIMzZWMzJIMTJWMTZaIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPHN0ZSB4MT0iMTYiIHkxPSIyMCIgeDI9IjMyIiB5Mj0iMjAiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIvPgo8bGluZSB4MT0iMTYiIHkxPSIyNCIgeDI9IjI4IiB5Mj0iMjQiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIvPgo8bGluZSB4MT0iMTYiIHkxPSIyOCIgeDI9IjI0IiB5Mj0iMjgiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIvPgo8L3N2Zz4=",
-      "sizes": "48x48",
-      "type": "image/svg+xml"
-    },
-    {
-      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2IiByeD0iMTYiIGZpbGw9IiMwMDMwODIiLz4KPHN0ZyB4PSIyNCIgeT0iMzIiIHdpZHRoPSI0OCIgaGVpZ2h0PSIzMiIgZmlsbD0ibm9uZSI+CjxyZWN0IHdpZHRoPSI0OCIgaGVpZ2h0PSIzMiIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSI0Ii8+CjxsaW5lIHgxPSI4IiB5MT0iOCIgeDI9IjQwIiB5Mj0iOCIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSI0Ii8+CjxsaW5lIHgxPSI4IiB5MT0iMTYiIHgyPSIzMiIgeTI9IjE2IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjQiLz4KPGxpbmUgeDE9IjgiIHkxPSIyNCIgeDI9IjI0IiB5Mj0iMjQiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iNCIvPgo8L3N2Zz4KPC9zdmc+",
-      "sizes": "96x96",
-      "type": "image/svg+xml"
-    },
-    {
-      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMzIiIGZpbGw9IiMwMDMwODIiLz4KPHN2ZyB4PSI0OCIgeT0iNjQiIHdpZHRoPSI5NiIgaGVpZ2h0PSI2NCIgZmlsbD0ibm9uZSI+CjxyZWN0IHdpZHRoPSI5NiIgaGVpZ2h0PSI2NCIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSI4Ii8+CjxsaW5lIHgxPSIxNiIgeTE9IjE2IiB4Mj0iODAiIHkyPSIxNiIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSI4Ii8+CjxsaW5lIHgxPSIxNiIgeTE9IjMyIiB4Mj0iNjQiIHkyPSIzMiIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSI4Ii8+CjxsaW5lIHgxPSIxNiIgeTE9IjQ4IiB4Mj0iNDgiIHkyPSI0OCIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSI4Ii8+CjwvZ3N2Zz4KPC9zdmc+",
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='32' fill='%23003082'/%3E%3Crect x='48' y='64' width='96' height='64' stroke='white' stroke-width='8' fill='none'/%3E%3Cline x1='64' y1='80' x2='144' y2='80' stroke='white' stroke-width='4'/%3E%3Cline x1='64' y1='96' x2='128' y2='96' stroke='white' stroke-width='4'/%3E%3Cline x1='64' y1='112' x2='112' y2='112' stroke='white' stroke-width='4'/%3E%3C/svg%3E",
       "sizes": "192x192",
-      "type": "image/svg+xml"
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     },
     {
-      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iODQiIGZpbGw9IiMwMDMwODIiLz4KPHN2ZyB4PSIxMjgiIHk9IjE3MSIgd2lkdGg9IjI1NiIgaGVpZ2h0PSIxNzAiIGZpbGw9Im5vbmUiPgo8cmVjdCB3aWR0aD0iMjU2IiBoZWlnaHQ9IjE3MCIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyMCIvPgo8bGluZSB4MT0iNDMiIHkxPSI0MyIgeDI9IjIxMyIgeTI9IjQzIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIwIi8+CjxsaW5lIHgxPSI0MyIgeTE9Ijg1IiB4Mj0iMTcxIiB5Mj0iODUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMjAiLz4KPGxpbmUgeDE9IjQzIiB5MT0iMTI3IiB4Mj0iMTI4IiB5Mj0iMTI3IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIwIi8+CjwvZ3N2Zz4KPC9zdmc+",
-      "sizes": "512x512",
-      "type": "image/svg+xml"
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='84' fill='%23003082'/%3E%3Crect x='128' y='171' width='256' height='170' stroke='white' stroke-width='20' fill='none'/%3E%3Cline x1='171' y1='214' x2='341' y2='214' stroke='white' stroke-width='12'/%3E%3Cline x1='171' y1='256' x2='299' y2='256' stroke='white' stroke-width='12'/%3E%3Cline x1='171' y1='298' x2='256' y2='298' stroke='white' stroke-width='12'/%3E%3C/svg%3E",
+      "sizes": "512x512", 
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     }
   ]
 }
