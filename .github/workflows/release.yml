@@ -1,0 +1,165 @@
+name: Release
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      version_bump:
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+
+permissions:
+  contents: write
+  packages: write
+  id-token: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run tests
+      run: npm test
+      
+    - name: Configure Git
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        
+    - name: Determine version bump
+      id: version
+      run: |
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          echo "bump=${{ github.event.inputs.version_bump }}" >> $GITHUB_OUTPUT
+        else
+          # Auto-determine version bump based on commit message
+          if [[ "${{ github.event.head_commit.message }}" =~ ^.*\[major\].* ]]; then
+            echo "bump=major" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event.head_commit.message }}" =~ ^.*\[minor\].* ]]; then
+            echo "bump=minor" >> $GITHUB_OUTPUT
+          else
+            echo "bump=patch" >> $GITHUB_OUTPUT
+          fi
+        fi
+        
+    - name: Bump version
+      id: bump_version
+      run: |
+        # Get current version
+        CURRENT_VERSION=$(node -p "require('./package.json').version")
+        echo "Current version: $CURRENT_VERSION"
+        
+        # Bump version
+        NEW_VERSION=$(npm version ${{ steps.version.outputs.bump }} --no-git-tag-version)
+        NEW_VERSION=${NEW_VERSION#v}  # Remove 'v' prefix
+        echo "New version: $NEW_VERSION"
+        echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+        
+        # Update version.js
+        BUILD_DATE=$(date +%Y-%m-%d)
+        GIT_COMMIT=$(git rev-parse --short HEAD)
+        
+        cat > version.js << EOF
+        // Version management for Albert Heijn Self-Scanner
+        // This version is automatically updated by release workflows
+        
+        const APP_VERSION = {
+            version: "$NEW_VERSION",
+            buildDate: "$BUILD_DATE",
+            gitCommit: "$GIT_COMMIT",
+            environment: "production"
+        };
+        
+        // Function to display version in the footer
+        function displayVersionInfo() {
+            const footer = document.querySelector('.app-footer');
+            if (footer) {
+                const versionText = \`v\${APP_VERSION.version} (\${APP_VERSION.buildDate})\`;
+                const versionElement = footer.querySelector('.version-info');
+                if (versionElement) {
+                    versionElement.textContent = versionText;
+                }
+            }
+        }
+        
+        // Export for use in other modules
+        if (typeof module !== 'undefined' && module.exports) {
+            module.exports = APP_VERSION;
+        }
+        
+        // Auto-display version when DOM is loaded
+        if (typeof document !== 'undefined') {
+            document.addEventListener('DOMContentLoaded', displayVersionInfo);
+        }
+        EOF
+        
+    - name: Generate changelog
+      id: changelog
+      run: |
+        # Generate changelog from git commits since last tag
+        LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+        if [[ -z "$LAST_TAG" ]]; then
+          COMMITS=$(git log --pretty=format:"* %s" --reverse)
+        else
+          COMMITS=$(git log ${LAST_TAG}..HEAD --pretty=format:"* %s" --reverse)
+        fi
+        
+        echo "## Changes" > CHANGELOG.tmp
+        echo "" >> CHANGELOG.tmp
+        echo "$COMMITS" >> CHANGELOG.tmp
+        echo "" >> CHANGELOG.tmp
+        echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${LAST_TAG}...v${{ steps.bump_version.outputs.version }}" >> CHANGELOG.tmp
+        
+    - name: Commit version bump
+      run: |
+        git add package.json version.js
+        git commit -m "chore: bump version to ${{ steps.bump_version.outputs.version }} [skip ci]"
+        
+    - name: Create and push tag
+      run: |
+        git tag -a "v${{ steps.bump_version.outputs.version }}" -m "Release v${{ steps.bump_version.outputs.version }}"
+        git push origin main
+        git push origin "v${{ steps.bump_version.outputs.version }}"
+        
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ steps.bump_version.outputs.version }}
+        release_name: Release v${{ steps.bump_version.outputs.version }}
+        body_path: CHANGELOG.tmp
+        draft: false
+        prerelease: false
+        
+    - name: Release Summary
+      run: |
+        echo "🎉 Successfully released version ${{ steps.bump_version.outputs.version }}!"
+        echo "📋 Release details:"
+        echo "  - Version: ${{ steps.bump_version.outputs.version }}"
+        echo "  - Bump type: ${{ steps.version.outputs.bump }}"
+        echo "  - Tag: v${{ steps.bump_version.outputs.version }}"
+        echo "  - Release URL: https://github.com/${{ github.repository }}/releases/tag/v${{ steps.bump_version.outputs.version }}"

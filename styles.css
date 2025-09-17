@@ -932,3 +932,57 @@ body {
         padding: 1rem;
     }
 }
+
+/* Footer Styles */
+.app-footer {
+    background-color: var(--ah-dark-blue);
+    color: var(--ah-white);
+    padding: 1.5rem 0;
+    margin-top: 3rem;
+    border-top: 3px solid var(--ah-blue);
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.footer-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.app-name {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.version-info {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    font-family: 'Courier New', monospace;
+}
+
+.footer-disclaimer {
+    text-align: right;
+    opacity: 0.7;
+}
+
+.footer-disclaimer small {
+    font-size: 0.75rem;
+}
+
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .footer-disclaimer {
+        text-align: center;
+    }
+}

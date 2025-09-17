@@ -22,8 +22,10 @@ De applicatie is beschikbaar op: [GitHub Pages URL]
 - **Frontend**: Vanilla HTML5, CSS3, JavaScript (ES6+)
 - **Styling**: Albert Heijn kleurenschema met CSS Grid en Flexbox
 - **PWA**: Service Worker voor offline functionaliteit
-- **CI/CD**: GitHub Actions voor automatische deployment
-- **Testing**: Ingebouwde test suite
+- **CI/CD**: GitHub Actions voor automatische deployment en releases
+- **Testing**: Ingebouwde test suite met Node.js 24
+- **Docker**: Container support met GitHub Container Registry (GHCR)
+- **Versioning**: Semantic versioning met automatische releases
 
 ## 📱 Functionaliteiten
 
@@ -152,6 +154,18 @@ open index.html
 python -m http.server 8000
 # Navigeer naar http://localhost:8000
 ```
+
+### Docker Deployment
+```bash
+# Pull en start vanaf GHCR
+docker run -p 8000:8000 ghcr.io/commjoen/seflscanfun:latest
+
+# Lokaal bouwen
+docker build -t seflscanfun .
+docker run -p 8000:8000 seflscanfun
+```
+
+Zie [DOCKER.md](DOCKER.md) voor uitgebreide Docker documentatie including Kubernetes en Cloud Run deployment.
 
 ## 🔒 Veiligheid & Best Practices
 
