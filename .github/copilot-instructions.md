@@ -67,40 +67,76 @@ For enhanced development with dependencies:
    npm install
    ```
    - Dependencies already defined in package.json
-   - Takes ~2-5 seconds to install
+   - Takes ~4 seconds to install (measured: ~4s)
 
-2. **Start advanced server (if needed):**
+2. **Start Node.js server (alternative):**
    ```bash
-   node app.js  # If implementing server-side features
+   npm start
    ```
    - Starts immediately (< 1 second)
    - **NEVER CANCEL** - Keep server running during development
+   - Includes health check endpoint at /health
 
 ### Testing and Validation
+
+#### Automated Testing (Required Before Changes)
+**CRITICAL**: Always run tests before making any changes to understand baseline:
+
+1. **Install dependencies first:**
+   ```bash
+   npm install  # Takes ~4 seconds
+   ```
+
+2. **Run complete test suite:**
+   ```bash
+   npm test
+   ```
+   - **Execution time:** ~0.8 seconds (measured: 0.778s)
+   - **Total tests:** 21 comprehensive tests
+   - **Expected success rate:** 100%
+   - **NEVER CANCEL** - Always wait for completion
+   - **Coverage includes:**
+     - Product database functionality (13 tests)
+     - Application integration (8 tests)
+     - File structure validation
+     - HTML/CSS/JS validation
+     - Albert Heijn branding compliance
+
+3. **Browser-based testing:**
+   ```bash
+   # Start server first
+   python3 -m http.server 8000
+   
+   # Open test page
+   curl -s http://localhost:8000/test.html | head -10
+   ```
 
 #### Manual Validation Requirements
 **CRITICAL**: After any changes to the web application, ALWAYS manually validate through complete user scenarios:
 
 1. **Core Self-Scanner Workflow:**
    - Navigate to http://localhost:8000/
-   - Test scanning products (enter barcode "8717163016078" for AH Melk)
+   - Test scanning products (enter barcode "8713800000015" for AH Verse melk)
    - Verify products appear in shopping cart with correct pricing
    - Test cart quantity modifications using +/- buttons
-   - Proceed through checkout process and payment simulation
-   - Verify digital receipt generation and display
+   - Proceed through checkout process and payment simulation (PIN, Contactloos, Contant)
+   - Verify digital receipt generation with BTW calculation and receipt number
+   - **Time expectation:** 3-5 minutes per complete test
 
 2. **Advanced Features Testing:**
    - Test "Lees van Scanner" random receipt functionality
    - Verify offline functionality using Service Worker
-   - Test product search and filtering
+   - Test product search and filtering by category
    - Validate payment method selection and processing
-   - Test receipt email/print simulation
+   - Test receipt print/email simulation
+   - **Time expectation:** 2-3 minutes per feature test
 
 3. **UI/UX Validation:**
    - Test responsive design on different screen sizes  
    - Verify Albert Heijn color scheme compliance (#003082 blue)
    - Test touch interactions for tablet/phone interface
    - Validate accessibility features and keyboard navigation
+   - **Time expectation:** 2-3 minutes per viewport test
 
 4. **HTTP Testing:**
    ```bash
@@ -109,13 +145,6 @@ For enhanced development with dependencies:
    - Should return 200 OK status
    - Takes < 1 second
 
-#### Automated Testing (Available)
-- **Test suite available in test.html**
-- Run tests by opening: http://localhost:8000/test.html
-- Expected test duration: ~5-10 seconds for unit tests
-- **NEVER CANCEL** tests - Always wait for completion
-- All core functionality is covered by automated tests
-
 #### Automated UI Testing (Available)
 The environment includes Playwright browser automation for UI validation:
 
@@ -123,7 +152,8 @@ The environment includes Playwright browser automation for UI validation:
 # Browser automation is available via playwright tools
 # Test key functionality automatically:
 playwright-browser_navigate http://localhost:8000/
-playwright-browser_click "Start Scannen button"
+playwright-browser_type "barcode input field" "8713800000015"
+playwright-browser_click "Scan button"
 playwright-browser_take_screenshot
 ```
 
@@ -157,8 +187,8 @@ npm install -g prettier    # Code formatting
 
 ### Expected Timing and Timeout Guidelines
 - **Repository clone:** < 5 seconds
-- **npm init:** < 1 second (measured: ~0.1 seconds)
-- **npm install (basic packages):** 2-15 seconds (measured: express install ~4 seconds)
+- **npm install:** ~4 seconds (measured: 4.0s)
+- **npm test:** < 1 second (measured: ~0.8 seconds)
 - **Web server startup:** < 1 second (measured: immediate)
 - **HTTP server startup:** < 1 second (measured: immediate)
 - **Manual validation scenarios:** 5-10 minutes per complete workflow
@@ -173,21 +203,22 @@ Before considering any implementation complete, ALWAYS test these scenarios:
 1. **Basic Scanner Simulation:**
    - Start web application on http://localhost:8000/
    - Navigate to main scanner interface  
-   - Input test product codes (8717163016078, 8712100723612, etc.)
+   - Input test product codes (8713800000015 for AH Verse melk, 8710398230046 for AH Brood wit)
    - Verify cart updates correctly with product details and pricing
-   - Complete checkout process with payment simulation
+   - Complete checkout process with payment simulation (PIN/Contactloos/Contant)
+   - Verify digital receipt shows BTW calculation and receipt number
    - **Time expectation:** 3-5 minutes per test
 
 2. **Random Receipt Feature:**
    - Access "Lees van Scanner" functionality
    - Generate random digital receipt
-   - Verify realistic products and pricing display correctly
+   - Verify realistic products and pricing display correctly (typically 8+ products)
    - Test receipt download/email simulation
    - **Time expectation:** 1-2 minutes per test
 
 3. **Responsive Design:**
    - Test on simulated tablet viewport (768px+)
-   - Test on simulated phone viewport (320px-768px)
+   - Test on simulated phone viewport (375x667px)
    - Verify touch-friendly interface and mobile navigation
    - **Time expectation:** 2-3 minutes per test
 
@@ -204,25 +235,34 @@ Before considering any implementation complete, ALWAYS test these scenarios:
 seflscanfun/
 ├── .git/           # Git repository metadata
 ├── .github/        # GitHub configuration
-│   └── copilot-instructions.md  # This file
+│   ├── copilot-instructions.md  # This file
+│   └── workflows/
+│       ├── deploy.yml    # Main CI/CD workflow
+│       ├── docker.yml    # Docker builds
+│       └── release.yml   # Release automation
 ├── .gitignore      # Git ignore rules (excludes node_modules, etc.)
 ├── README.md       # Complete project documentation (6KB+)
-├── index.html      # Main application entry point (5KB+)
+├── index.html      # Main application entry point (9KB+)
 ├── app.js          # Core application logic with scanner simulation (15KB+) 
 ├── styles.css      # Albert Heijn styling and responsive design (12KB+)
 ├── products.js     # Product database with realistic Dutch products (6KB+)
 ├── sw.js           # Service Worker for offline functionality
 ├── test.html       # Test suite for application validation (8KB+)
+├── test-runner.js  # Node.js test runner for CI/CD
+├── tests/          # Test directory
+│   └── integration-tests.js # Application integration tests
+├── server.js       # Node.js HTTP server alternative
 ├── package.json    # Node.js project configuration
 └── package-lock.json # Dependency lock file
 ```
 
 #### Key Application Files
-- **index.html**: Complete Albert Heijn self-scanner interface
+- **index.html**: Complete Albert Heijn self-scanner interface with responsive design
 - **app.js**: SelfScannerApp class with full shopping cart and payment logic
 - **styles.css**: Albert Heijn color scheme (#003082) with responsive design
 - **products.js**: Realistic Dutch grocery product database (70+ products)
 - **test.html**: Comprehensive test suite for all application functionality
+- **test-runner.js**: Node.js test runner for CI/CD compatibility
 - **sw.js**: Service Worker for PWA offline functionality
 
 #### Expected Future Structure (Completed)
@@ -245,7 +285,7 @@ Based on issue #2, the application must include:
 - **Product Database:** Include realistic Dutch grocery products
 - **Language:** Interface should support Dutch language
 - **Mobile-First:** Responsive design prioritizing mobile/tablet experience
-- **Receipt Format:** Match Albert Heijn's actual receipt layout
+- **Receipt Format:** Match Albert Heijn's actual receipt layout with BTW
 - **Scanner Simulation:** Realistic barcode scanning workflow
 
 ### Common Tasks Reference
@@ -266,6 +306,25 @@ git --no-pager log --oneline -5  # Recent commits
 git --no-pager branch    # Current branch
 ```
 
+#### Complete Validation Workflow
+```bash
+# 1. Install dependencies (4 seconds)
+npm install
+
+# 2. Run automated tests (0.8 seconds) 
+npm test
+
+# 3. Start development server (immediate)
+python3 -m http.server 8000 &
+
+# 4. Validate server response (immediate)
+curl -I http://localhost:8000/
+
+# 5. Manual validation via browser (5-10 minutes)
+# Navigate to http://localhost:8000/
+# Test scanning, cart, checkout, receipt workflows
+```
+
 ### Troubleshooting
 
 #### Common Issues and Solutions
@@ -282,11 +341,17 @@ git --no-pager branch    # Current branch
    - Clear npm cache: `npm cache clean --force`
    - Delete node_modules and reinstall: `rm -rf node_modules && npm install`
 
-### GitHub Pages Deployment (Future)
-When ready for deployment:
-- Repository supports GitHub Pages hosting
-- Main application should be in repository root or docs/ folder
-- Use `index.html` as entry point for automatic GitHub Pages detection
+4. **Tests fail:**
+   - Check file permissions: `ls -la *.js *.html`
+   - Ensure all required files exist: `ls index.html app.js products.js styles.css`
+   - Verify Node.js compatibility (requires Node.js 18+, warns about 24+)
+
+### GitHub Pages Deployment (Active)
+The repository supports GitHub Pages hosting:
+- Repository uses GitHub Pages automatic deployment via GitHub Actions
+- Main application is in repository root with `index.html` as entry point
+- GitHub Actions workflow handles testing and deployment
+- Live URL available after deployment to main branch
 
 ### Security Considerations
 - This is a simulation project - do not implement real payment processing
@@ -299,5 +364,13 @@ When ready for deployment:
 - **Product search/scan:** < 500ms response time
 - **Cart operations:** Immediate UI updates
 - **Receipt generation:** < 1 second
+
+### Continuous Integration
+The repository includes GitHub Actions workflow:
+- **Location:** `.github/workflows/deploy.yml`
+- **Triggers:** Push to main branch, Pull requests to main
+- **Process:** Node.js 24 setup → npm install → npm test → deploy to Pages
+- **Test duration:** ~30-60 seconds total workflow time
+- **Expected result:** 100% test success rate
 
 Always prioritize user experience and ensure the simulation feels realistic while maintaining security and performance standards.
