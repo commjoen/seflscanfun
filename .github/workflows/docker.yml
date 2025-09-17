@@ -15,7 +15,6 @@ env:
 permissions:
   contents: read
   packages: write
-  id-token: write
 
 jobs:
   build:
@@ -25,6 +24,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
+    - name: Set up Node.js 24
+      uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+        
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
       
@@ -41,12 +45,9 @@ jobs:
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         tags: |
-          # set latest tag for main branch
           type=ref,event=branch
           type=ref,event=pr
           type=semver,pattern={{version}}
-          type=semver,pattern={{major}}.{{minor}}
-          type=semver,pattern={{major}}
           type=raw,value=latest,enable={{is_default_branch}}
         labels: |
           org.opencontainers.image.title=Albert Heijn Self-Scanner
@@ -55,24 +56,15 @@ jobs:
           org.opencontainers.image.licenses=ISC
           
     - name: Build and push Docker image
-      id: build
       uses: docker/build-push-action@v5
       with:
         context: .
         file: ./Dockerfile
-        platforms: linux/amd64,linux/arm64
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
-        
-    - name: Generate artifact attestation
-      uses: actions/attest-build-provenance@v1
-      with:
-        subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}
-        subject-digest: ${{ steps.build.outputs.digest }}
-        push-to-registry: true
         
     - name: Docker Summary
       run: |
@@ -81,29 +73,10 @@ jobs:
         echo "  - Registry: ${{ env.REGISTRY }}"
         echo "  - Image: ${{ env.IMAGE_NAME }}"
         echo "  - Tags: ${{ steps.meta.outputs.tags }}"
-        echo "  - Platforms: linux/amd64, linux/arm64"
+        echo "  - Node.js version: 24"
         echo ""
         echo "🚀 Usage instructions:"
         echo "  docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
         echo "  docker run -p 8000:8000 ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
         echo ""
         echo "🌐 Access the app at: http://localhost:8000"
-        
-  security-scan:
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name != 'pull_request'
-    
-    steps:
-    - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@master
-      with:
-        image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-        format: 'sarif'
-        output: 'trivy-results.sarif'
-        
-    - name: Upload Trivy scan results to GitHub Security tab
-      uses: github/codeql-action/upload-sarif@v2
-      if: always()
-      with:
-        sarif_file: 'trivy-results.sarif'

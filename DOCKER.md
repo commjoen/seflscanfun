@@ -45,7 +45,7 @@ services:
       - "8000:8000"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000')"]
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:8000/health', (res) => process.exit(res.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -95,13 +95,13 @@ spec:
         - containerPort: 8000
         livenessProbe:
           httpGet:
-            path: /
+            path: /health
             port: 8000
           initialDelaySeconds: 30
           periodSeconds: 10
         readinessProbe:
           httpGet:
-            path: /
+            path: /health
             port: 8000
           initialDelaySeconds: 5
           periodSeconds: 5
@@ -134,8 +134,8 @@ gcloud run deploy seflscanfun \
 ## Security
 
 - Container draait als non-root user (`app`)
-- Minimale base image (Python slim)
-- Security scanning met Trivy in CI/CD
+- Minimale base image (Node.js 24-alpine)
+- Simplified Docker workflow for reliability
 - Geen secrets of gevoelige data
 - Read-only root filesystem mogelijk
 
@@ -144,10 +144,10 @@ gcloud run deploy seflscanfun \
 ### Health Checks
 ```bash
 # HTTP health check
-curl -f http://localhost:8000/ || exit 1
+curl -f http://localhost:8000/health || exit 1
 
-# Python health check
-python3 -c "import urllib.request; urllib.request.urlopen('http://localhost:8000')"
+# Node.js health check
+node -e "require('http').get('http://localhost:8000/health', (res) => process.exit(res.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"
 ```
 
 ### Metrics
