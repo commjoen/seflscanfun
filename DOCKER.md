@@ -4,7 +4,7 @@ Dit document beschrijft hoe je de Albert Heijn Zelfscanner Simulatie kunt draaie
 
 ## Quick Start
 
-### Docker Hub gebruiken (aanbevolen)
+### Docker gebruiken (aanbevolen)
 ```bash
 # Pull en start de applicatie
 docker run -p 8000:8000 ghcr.io/commjoen/seflscanfun:latest

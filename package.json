@@ -9,7 +9,8 @@
   "scripts": {
     "test": "node test-runner.js",
     "test:browser": "echo 'Open http://localhost:8000/test.html in your browser'",
-    "start": "node -e \"console.log('Starting server on http://localhost:8000'); require('child_process').spawn('python3', ['-m', 'http.server', '8000'], {stdio: 'inherit'})\""
+    "start": "node server.js",
+    "dev": "node server.js"
   },
   "keywords": [],
   "author": "",
