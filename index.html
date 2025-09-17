@@ -5,6 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Albert Heijn Zelfscanner Simulatie</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Grid Fix - Ensures product grid layout works correctly */
+        #productGrid.product-grid {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+            gap: 1rem !important;
+        }
+        
+        @media (max-width: 768px) {
+            #productGrid.product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important;
+                gap: 0.75rem !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #productGrid.product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)) !important;
+                gap: 0.5rem !important;
+            }
+        }
+    </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">

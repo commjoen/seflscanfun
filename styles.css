@@ -842,11 +842,13 @@ body {
 .camera-control-btn:disabled {
     background-color: var(--ah-gray);
     cursor: not-allowed;
+}
+
 /* Product Catalog */
 .product-catalog {
     background-color: var(--ah-white);
     border-radius: var(--border-radius);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow);
     padding: 1.5rem;
     margin-bottom: 2rem;
 }
@@ -1033,5 +1035,26 @@ body {
     
     .footer-disclaimer {
         text-align: center;
+    }
+}
+
+/* Grid Fix - High Specificity */
+#productGrid.product-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+    gap: 1rem !important;
+}
+
+@media (max-width: 768px) {
+    #productGrid.product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important;
+        gap: 0.75rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    #productGrid.product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)) !important;
+        gap: 0.5rem !important;
     }
 }
