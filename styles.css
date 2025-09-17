@@ -883,7 +883,7 @@ body {
 }
 
 .product-card {
-    border: 2px solid var(--ah-gray);
+    border: 1px solid var(--ah-blue);
     border-radius: var(--border-radius);
     padding: 1.25rem;
     text-align: center;
