@@ -883,54 +883,72 @@ body {
 }
 
 .product-card {
-    border: 1px solid var(--ah-gray);
+    border: 1px solid var(--ah-blue);
     border-radius: var(--border-radius);
-    padding: 1rem;
+    padding: 1.25rem;
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
     background-color: var(--ah-white);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .product-card:hover {
     border-color: var(--ah-blue);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 48, 130, 0.15);
+    transform: translateY(-3px);
+    background-color: #f8f9ff;
+}
+
+.product-card:active {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 48, 130, 0.2);
 }
 
 .product-card-image {
-    font-size: 3rem;
-    margin-bottom: 0.5rem;
+    font-size: 3.5rem;
+    margin-bottom: 0.75rem;
     display: block;
+    line-height: 1;
 }
 
 .product-card-name {
     font-weight: 600;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.5rem;
     color: var(--ah-black);
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    line-height: 1.2;
 }
 
 .product-card-description {
     font-size: 0.8rem;
     color: var(--ah-dark-gray);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+    flex-grow: 1;
 }
 
 .product-card-price {
-    font-weight: 600;
+    font-weight: 700;
     color: var(--ah-blue);
-    font-size: 1rem;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
 }
 
 .product-card-category {
     font-size: 0.7rem;
     color: var(--ah-orange);
     background-color: var(--ah-light-gray);
-    padding: 0.2rem 0.5rem;
+    padding: 0.25rem 0.6rem;
     border-radius: 12px;
-    margin-top: 0.5rem;
+    margin-top: 0.25rem;
     display: inline-block;
+    font-weight: 500;
 }
 
 /* Product catalog responsive design */
