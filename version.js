@@ -1,11 +1,11 @@
 // Version management for Albert Heijn Self-Scanner
-// This version will be automatically updated by release workflows
+// This version is automatically updated by release workflows
 
 const APP_VERSION = {
-    version: "1.0.0",
+    version: "1.0.1",
     buildDate: "2025-09-17",
-    gitCommit: "",
-    environment: "development"
+    gitCommit: "9a9f82e",
+    environment: "production"
 };
 
 // Function to display version in the footer
