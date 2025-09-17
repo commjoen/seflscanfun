@@ -42,3 +42,12 @@ sw.js.map
 /tmp/
 *.tmp
 *.temp
+
+# Docker
+.dockerignore.bak
+
+# GitHub Actions artifacts
+.github-artifacts/
+
+# Release artifacts
+CHANGELOG.tmp
