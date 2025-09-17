@@ -78,6 +78,37 @@ body {
     gap: 1rem;
 }
 
+.install-btn {
+    background: var(--ah-orange);
+    border: none;
+    color: var(--ah-white);
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    animation: pulse 2s infinite;
+}
+
+.install-btn:hover {
+    background: var(--ah-orange);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow);
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+
+.install-btn .install-icon {
+    font-size: 1.1rem;
+}
+
 .sound-toggle {
     background: none;
     border: none;

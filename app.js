@@ -4,6 +4,7 @@ class SelfScannerApp {
         this.cart = [];
         this.currentProduct = null;
         this.cameraStream = null;
+        this.deferredPrompt = null;
         this.init();
     }
 
@@ -12,6 +13,61 @@ class SelfScannerApp {
         this.updateCartDisplay();
         this.initProductCatalog();
         this.focusBarcodeInput();
+        this.initPWAInstall();
+    }
+
+    initPWAInstall() {
+        const installBtn = document.getElementById('installBtn');
+        
+        if (!installBtn) {
+            console.log('Install button not found');
+            return;
+        }
+        
+        // Listen for the beforeinstallprompt event
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent the mini-infobar from appearing on mobile
+            e.preventDefault();
+            // Store the event so it can be triggered later
+            this.deferredPrompt = e;
+            // Show the install button
+            installBtn.style.display = 'flex';
+        });
+
+        // Handle install button click
+        installBtn.addEventListener('click', async () => {
+            if (!this.deferredPrompt) return;
+            
+            // Show the install prompt
+            this.deferredPrompt.prompt();
+            
+            // Wait for the user to respond
+            const { outcome } = await this.deferredPrompt.userChoice;
+            
+            if (outcome === 'accepted') {
+                console.log('User accepted the install prompt');
+                this.showMessage('App wordt geïnstalleerd...', 'success');
+            } else {
+                console.log('User dismissed the install prompt');
+            }
+            
+            // Reset the deferred prompt
+            this.deferredPrompt = null;
+            installBtn.style.display = 'none';
+        });
+
+        // Listen for app installed event
+        window.addEventListener('appinstalled', () => {
+            console.log('App was successfully installed');
+            this.showMessage('App succesvol geïnstalleerd!', 'success');
+            installBtn.style.display = 'none';
+            this.deferredPrompt = null;
+        });
+
+        // Hide install button if app is already installed (running in standalone mode)
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            installBtn.style.display = 'none';
+        }
     }
 
     bindEvents() {
@@ -807,10 +863,10 @@ document.addEventListener('DOMContentLoaded', () => {
     new SelfScannerApp();
 });
 
-// Service Worker registration for offline capability (optional)
+// Service Worker registration for offline capability
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
+        navigator.serviceWorker.register('./sw.js')
             .then(registration => {
                 console.log('SW registered: ', registration);
             })

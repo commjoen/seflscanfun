@@ -8,6 +8,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#003082">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="AH Scanner">
 </head>
 <body>
     <header class="header">
@@ -18,6 +23,10 @@
                     <span class="logo-subtitle">Zelfscanner</span>
                 </div>
                 <div class="header-controls">
+                    <button id="installBtn" class="install-btn" title="Installeer als app" style="display: none;">
+                        <span class="install-icon">📲</span>
+                        <span class="install-text">Installeer</span>
+                    </button>
                     <button id="soundToggle" class="sound-toggle" title="Geluid aan/uit">
                         <span class="sound-icon">🔊</span>
                     </button>
