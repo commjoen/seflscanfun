@@ -2,6 +2,7 @@
   "name": "seflscanfun",
   "version": "1.0.11",
   "description": "Albert Heijn Zelfscanner Simulatie - Een interactieve self-scanner ervaring",
+  "type": "module",
   "engines": {
     "node": ">=24.0.0"
   },
@@ -26,10 +27,7 @@
   "devDependencies": {
     "jsdom": "^27.0.0",
     "eslint": "^9.36.0",
-    "eslint-config-standard": "^17.1.0",
-    "eslint-plugin-import": "^2.30.0",
-    "eslint-plugin-n": "^17.23.1",
-    "eslint-plugin-promise": "^7.2.1",
+    "neostandard": "^0.12.2",
     "prettier": "^3.3.3"
   }
 }

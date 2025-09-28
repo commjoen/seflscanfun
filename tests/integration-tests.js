@@ -1,9 +1,13 @@
 // Simplified Integration Tests
 // Focus on testing core functionality that can be reliably tested in Node.js environment
 
-const fs = require('fs');
-const path = require('path');
-const { JSDOM } = require('jsdom');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { JSDOM } from 'jsdom';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 class SimplifiedAppTester {
     constructor() {
@@ -159,4 +163,4 @@ class SimplifiedAppTester {
     }
 }
 
-module.exports = { SimplifiedAppTester };
+export { SimplifiedAppTester };

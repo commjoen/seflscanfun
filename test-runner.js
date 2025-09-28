@@ -3,10 +3,14 @@
 // Node.js test runner for Albert Heijn Zelfscanner tests
 // This allows running the browser-based tests in a CI/CD environment
 
-const fs = require('fs');
-const path = require('path');
-const { JSDOM } = require('jsdom');
-const { SimplifiedAppTester } = require('./tests/integration-tests');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { JSDOM } from 'jsdom';
+import { SimplifiedAppTester } from './tests/integration-tests.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 async function runProductTests() {
     console.log('🧪 Running Product Database Tests...\n');
@@ -132,8 +136,8 @@ async function runAllTests() {
 }
 
 // Run tests if this file is executed directly
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
     runAllTests();
 }
 
-module.exports = { runAllTests, runProductTests };
+export { runAllTests, runProductTests };
