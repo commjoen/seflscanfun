@@ -38,6 +38,7 @@ self.addEventListener('activate', (event) => {
                         console.log('Deleting old cache:', cacheName);
                         return caches.delete(cacheName);
                     }
+                    return Promise.resolve();
                 })
             );
         })
@@ -51,7 +52,7 @@ self.addEventListener('fetch', (event) => {
     if (!event.request.url.startsWith('http')) {
         return;
     }
-    
+
     event.respondWith(
         caches.match(event.request)
             .then((response) => {
@@ -59,16 +60,16 @@ self.addEventListener('fetch', (event) => {
                 if (response) {
                     return response;
                 }
-                
+
                 return fetch(event.request).then((fetchResponse) => {
                     // Check if we received a valid response
                     if (!fetchResponse || fetchResponse.status !== 200 || fetchResponse.type !== 'basic') {
                         return fetchResponse;
                     }
-                    
+
                     // Clone the response since it can only be consumed once
                     const responseToCache = fetchResponse.clone();
-                    
+
                     // Only cache http/https requests to avoid chrome-extension errors
                     if (event.request.url.startsWith('http')) {
                         caches.open(CACHE_NAME)
@@ -79,7 +80,7 @@ self.addEventListener('fetch', (event) => {
                                 console.log('Cache put failed:', error);
                             });
                     }
-                    
+
                     return fetchResponse;
                 }).catch(() => {
                     // Return a fallback for navigation requests when offline

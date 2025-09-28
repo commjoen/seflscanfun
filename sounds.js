@@ -18,11 +18,11 @@ class SoundManager {
 
     // Create different types of click sounds
     playClickSound(type = 'default') {
-        if (!this.enabled || !this.audioContext) return;
+        if (!this.enabled || !this.audioContext) { return; }
 
         const oscillator = this.audioContext.createOscillator();
         const gainNode = this.audioContext.createGain();
-        
+
         oscillator.connect(gainNode);
         gainNode.connect(this.audioContext.destination);
 
@@ -37,7 +37,7 @@ class SoundManager {
                 oscillator.start(this.audioContext.currentTime);
                 oscillator.stop(this.audioContext.currentTime + 0.15);
                 break;
-                
+
             case 'success':
                 // Success sound - pleasant ascending tone
                 oscillator.frequency.setValueAtTime(440, this.audioContext.currentTime);
@@ -47,7 +47,7 @@ class SoundManager {
                 oscillator.start(this.audioContext.currentTime);
                 oscillator.stop(this.audioContext.currentTime + 0.25);
                 break;
-                
+
             case 'error':
                 // Error sound - lower pitched, descending
                 oscillator.frequency.setValueAtTime(300, this.audioContext.currentTime);
@@ -57,12 +57,12 @@ class SoundManager {
                 oscillator.start(this.audioContext.currentTime);
                 oscillator.stop(this.audioContext.currentTime + 0.35);
                 break;
-                
+
             case 'payment':
                 // Payment confirmation - double beep
                 this.createDoubleBeep();
                 break;
-                
+
             case 'button':
             default:
                 // Standard button click - short, crisp

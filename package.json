@@ -10,7 +10,12 @@
     "test": "node test-runner.js",
     "test:browser": "echo 'Open http://localhost:8000/test.html in your browser'",
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "lint": "eslint . --fix",
+    "lint:check": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "command -v pre-commit >/dev/null 2>&1 && pre-commit install || echo 'pre-commit not installed, skipping hook installation'"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +24,12 @@
     "express": "^5.1.0"
   },
   "devDependencies": {
-    "jsdom": "^27.0.0"
+    "jsdom": "^27.0.0",
+    "eslint": "^8.57.1",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.30.0",
+    "eslint-plugin-n": "^17.10.3",
+    "eslint-plugin-promise": "^7.1.0",
+    "prettier": "^3.3.3"
   }
 }
