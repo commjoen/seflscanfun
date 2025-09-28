@@ -1,0 +1,81 @@
+# Dependabot configuration for Albert Heijn Self-Scanner project
+# Automatically updates dependencies to keep the project secure and up-to-date
+
+version: 2
+updates:
+  # Enable version updates for npm dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:00"
+      timezone: "Europe/Amsterdam"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "commjoen"
+    assignees:
+      - "commjoen"
+    commit-message:
+      prefix: "chore(deps):"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "javascript"
+    ignore:
+      # Ignore major version updates for critical dependencies to avoid breaking changes
+      - dependency-name: "express"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "jsdom"
+        update-types: ["version-update:semver-major"]
+    groups:
+      # Group production dependencies together
+      production-dependencies:
+        dependency-type: "production"
+        patterns:
+          - "express*"
+      # Group development dependencies together
+      development-dependencies:
+        dependency-type: "development"
+        patterns:
+          - "*"
+
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:30"
+      timezone: "Europe/Amsterdam"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "commjoen"
+    assignees:
+      - "commjoen"
+    commit-message:
+      prefix: "chore(ci):"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "github-actions"
+      
+  # Enable version updates for Docker dependencies
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "04:00"
+      timezone: "Europe/Amsterdam"
+    open-pull-requests-limit: 2
+    reviewers:
+      - "commjoen"
+    assignees:
+      - "commjoen"
+    commit-message:
+      prefix: "chore(docker):"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "docker"

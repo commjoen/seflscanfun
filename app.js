@@ -18,12 +18,12 @@ class SelfScannerApp {
 
     initPWAInstall() {
         const installBtn = document.getElementById('installBtn');
-        
+
         if (!installBtn) {
             console.log('Install button not found');
             return;
         }
-        
+
         // Listen for the beforeinstallprompt event
         window.addEventListener('beforeinstallprompt', (e) => {
             // Prevent the mini-infobar from appearing on mobile
@@ -35,22 +35,22 @@ class SelfScannerApp {
         });
 
         // Handle install button click
-        installBtn.addEventListener('click', async () => {
-            if (!this.deferredPrompt) return;
-            
+        installBtn.addEventListener('click', async() => {
+            if (!this.deferredPrompt) { return; }
+
             // Show the install prompt
             this.deferredPrompt.prompt();
-            
+
             // Wait for the user to respond
             const { outcome } = await this.deferredPrompt.userChoice;
-            
+
             if (outcome === 'accepted') {
                 console.log('User accepted the install prompt');
                 this.showMessage('App wordt geïnstalleerd...', 'success');
             } else {
                 console.log('User dismissed the install prompt');
             }
-            
+
             // Reset the deferred prompt
             this.deferredPrompt = null;
             installBtn.style.display = 'none';
@@ -229,7 +229,7 @@ class SelfScannerApp {
         // Simulate scanning delay
         setTimeout(() => {
             const product = findProductByBarcode(barcode);
-            
+
             if (product) {
                 window.soundManager?.playClickSound('success');
                 this.displayProduct(barcode, product);
@@ -249,7 +249,7 @@ class SelfScannerApp {
 
     displayProduct(barcode, product) {
         this.currentProduct = { barcode, ...product };
-        
+
         const productDisplay = document.getElementById('productDisplay');
         const productImage = document.getElementById('productImage');
         const productName = document.getElementById('productName');
@@ -259,7 +259,7 @@ class SelfScannerApp {
         // Use emoji as image placeholder
         productImage.style.display = 'none';
         productImage.nextElementSibling?.remove(); // Remove any existing emoji
-        
+
         const emojiSpan = document.createElement('span');
         emojiSpan.style.fontSize = '60px';
         emojiSpan.style.display = 'block';
@@ -283,10 +283,10 @@ class SelfScannerApp {
     }
 
     addCurrentProductToCart() {
-        if (!this.currentProduct) return;
+        if (!this.currentProduct) { return; }
 
         const existingItem = this.cart.find(item => item.barcode === this.currentProduct.barcode);
-        
+
         if (existingItem) {
             existingItem.quantity += 1;
         } else {
@@ -361,7 +361,7 @@ class SelfScannerApp {
 
     renderCartItem(item) {
         const totalPrice = item.price * item.quantity;
-        
+
         return `
             <div class="cart-item">
                 <div class="cart-item-info">
@@ -403,7 +403,7 @@ class SelfScannerApp {
     }
 
     startCheckout() {
-        if (this.cart.length === 0) return;
+        if (this.cart.length === 0) { return; }
 
         const totalPrice = this.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         document.getElementById('paymentAmount').textContent = this.formatPrice(totalPrice);
@@ -412,10 +412,10 @@ class SelfScannerApp {
 
     processPayment(method) {
         this.closeModal('paymentModal');
-        
+
         // Simulate payment processing
         this.showMessage('Betaling wordt verwerkt...', 'info');
-        
+
         setTimeout(() => {
             this.showMessage(`Betaling succesvol via ${this.getPaymentMethodName(method)}!`, 'success');
             this.generateReceipt();
@@ -424,9 +424,9 @@ class SelfScannerApp {
 
     getPaymentMethodName(method) {
         const methods = {
-            'pin': 'PIN',
-            'contactless': 'Contactloos',
-            'cash': 'Contant'
+            pin: 'PIN',
+            contactless: 'Contactloos',
+            cash: 'Contant'
         };
         return methods[method] || method;
     }
@@ -482,7 +482,7 @@ class SelfScannerApp {
         this.cart = randomProducts;
         this.updateCartDisplay();
         this.showMessage('Willekeurige bon geladen!', 'success');
-        
+
         // Automatically generate receipt
         setTimeout(() => {
             this.generateReceipt();
@@ -576,10 +576,10 @@ class SelfScannerApp {
             const startBtn = document.getElementById('startCamera');
             const stopBtn = document.getElementById('stopCamera');
             const video = document.getElementById('cameraVideo');
-            
+
             startBtn.disabled = true;
             this.updateCameraStatus('Camera wordt gestart...');
-            
+
             // Request camera access
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: {
@@ -588,22 +588,21 @@ class SelfScannerApp {
                     height: { ideal: 480 }
                 }
             });
-            
+
             video.srcObject = stream;
             this.cameraStream = stream;
-            
+
             // Start barcode scanning
             this.initializeQuagga();
-            
+
             startBtn.style.display = 'none';
             stopBtn.style.display = 'block';
             this.updateCameraStatus('Richt uw camera op een barcode...');
-            
         } catch (error) {
             console.error('Camera error:', error);
             this.updateCameraStatus('Kan camera niet starten. Controleer toestemmingen.');
             document.getElementById('startCamera').disabled = false;
-            
+
             let errorMessage = 'Kan camera niet toegang krijgen';
             if (error.name === 'NotAllowedError') {
                 errorMessage = 'Camera toegang geweigerd. Sta camera toe in browserinstellingen.';
@@ -619,48 +618,48 @@ class SelfScannerApp {
             this.cameraStream.getTracks().forEach(track => track.stop());
             this.cameraStream = null;
         }
-        
+
         if (typeof Quagga !== 'undefined') {
             Quagga.stop();
         }
-        
+
         const startBtn = document.getElementById('startCamera');
         const stopBtn = document.getElementById('stopCamera');
         const video = document.getElementById('cameraVideo');
-        
+
         video.srcObject = null;
         startBtn.style.display = 'block';
         startBtn.disabled = false;
         stopBtn.style.display = 'none';
-        
+
         this.updateCameraStatus('Camera gestopt');
     }
 
     initializeQuagga() {
         const video = document.getElementById('cameraVideo');
-        
+
         Quagga.init({
             inputStream: {
-                name: "Live",
-                type: "LiveStream",
+                name: 'Live',
+                type: 'LiveStream',
                 target: video,
                 constraints: {
                     width: 640,
                     height: 480,
-                    facingMode: "environment"
+                    facingMode: 'environment'
                 }
             },
             locator: {
-                patchSize: "medium",
+                patchSize: 'medium',
                 halfSample: true
             },
             numOfWorkers: 2,
             decoder: {
                 readers: [
-                    "code_128_reader",
-                    "ean_reader",
-                    "ean_8_reader", 
-                    "code_39_reader"
+                    'code_128_reader',
+                    'ean_reader',
+                    'ean_8_reader',
+                    'code_39_reader'
                 ]
             },
             locate: true
@@ -670,10 +669,10 @@ class SelfScannerApp {
                 this.updateCameraStatus('Barcode scanner kon niet starten');
                 return;
             }
-            
+
             // Start scanning
             Quagga.start();
-            
+
             // Listen for detected barcodes
             Quagga.onDetected(this.onBarcodeDetected.bind(this));
         });
@@ -681,16 +680,16 @@ class SelfScannerApp {
 
     onBarcodeDetected(result) {
         const barcode = result.codeResult.code;
-        
+
         // Validate barcode (basic check)
         if (barcode && barcode.length >= 8) {
             window.soundManager?.playClickSound('success');
             this.updateCameraStatus(`Barcode gevonden: ${barcode}`);
-            
+
             // Close camera and process the barcode
             this.stopCamera();
             this.closeModal('cameraModal');
-            
+
             // Process the scanned barcode
             this.processBarcodeFromCamera(barcode);
         }
@@ -699,7 +698,7 @@ class SelfScannerApp {
     processBarcodeFromCamera(barcode) {
         // Use the existing product lookup logic
         const product = findProductByBarcode(barcode);
-        
+
         if (product) {
             this.displayProduct(barcode, product);
             this.showMessage(`Product gevonden via camera: ${product.name}`, 'success');
@@ -725,7 +724,7 @@ class SelfScannerApp {
         const isEnabled = window.soundManager?.toggle();
         const soundToggle = document.getElementById('soundToggle');
         const soundIcon = soundToggle.querySelector('.sound-icon');
-        
+
         if (isEnabled) {
             soundToggle.classList.remove('disabled');
             soundIcon.textContent = '🔊';
@@ -759,12 +758,12 @@ class SelfScannerApp {
     populateCategoryFilter() {
         const categoryFilter = document.getElementById('categoryFilter');
         const categories = getAllCategories();
-        
+
         // Clear existing options except "Alle categorieën"
         while (categoryFilter.children.length > 1) {
             categoryFilter.removeChild(categoryFilter.lastChild);
         }
-        
+
         // Add category options
         categories.forEach(category => {
             const option = document.createElement('option');
@@ -777,15 +776,15 @@ class SelfScannerApp {
     renderProductCatalog(filteredProducts = null) {
         const productGrid = document.getElementById('productGrid');
         const productsToShow = filteredProducts || this.getAllProductsArray();
-        
+
         productGrid.innerHTML = productsToShow.map(product => this.renderProductCard(product)).join('');
-        
+
         // Bind click events to product cards
         this.bindProductCardEvents();
     }
 
     getAllProductsArray() {
-        return Object.entries(PRODUCTS_DATABASE).map(([barcode, product]) => ({
+        return Object.entries(products).map(([barcode, product]) => ({
             barcode,
             ...product
         }));
@@ -815,10 +814,10 @@ class SelfScannerApp {
 
     addProductToCartByBarcode(barcode) {
         const product = findProductByBarcode(barcode);
-        if (!product) return;
+        if (!product) { return; }
 
         const existingItem = this.cart.find(item => item.barcode === barcode);
-        
+
         if (existingItem) {
             existingItem.quantity += 1;
         } else {
@@ -836,9 +835,9 @@ class SelfScannerApp {
     filterProducts() {
         const searchTerm = document.getElementById('productSearch').value.toLowerCase();
         const selectedCategory = document.getElementById('categoryFilter').value;
-        
+
         let filteredProducts = this.getAllProductsArray();
-        
+
         // Filter by search term
         if (searchTerm) {
             filteredProducts = filteredProducts.filter(product =>
@@ -846,20 +845,21 @@ class SelfScannerApp {
                 product.description.toLowerCase().includes(searchTerm)
             );
         }
-        
+
         // Filter by category
         if (selectedCategory) {
             filteredProducts = filteredProducts.filter(product =>
                 product.category === selectedCategory
             );
         }
-        
+
         this.renderProductCatalog(filteredProducts);
     }
 }
 
 // Initialize app when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    // eslint-disable-next-line no-new
     new SelfScannerApp();
 });
 

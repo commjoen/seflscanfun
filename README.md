@@ -26,6 +26,8 @@ De applicatie is beschikbaar op: [GitHub Pages URL]
 - **Testing**: Ingebouwde test suite met Node.js 24
 - **Docker**: Container support met GitHub Container Registry (GHCR)
 - **Versioning**: Semantic versioning met automatische releases
+- **Code Quality**: ESLint, Prettier, en pre-commit hooks
+- **Dependency Management**: Dependabot voor automatische updates
 
 ## 📱 Functionaliteiten
 
@@ -147,12 +149,27 @@ De applicatie wordt automatisch gedeployed naar GitHub Pages via GitHub Actions:
 # Clone repository
 git clone [repository-url]
 
-# Open in browser
-open index.html
+# Install dependencies
+npm install
 
+# Start development server
+npm start
 # Of gebruik een lokale server
 python -m http.server 8000
 # Navigeer naar http://localhost:8000
+```
+
+### Code Quality Tools
+```bash
+# Linting en formatting
+npm run lint:check    # Check ESLint rules
+npm run lint          # Fix ESLint issues
+npm run format:check  # Check Prettier formatting  
+npm run format        # Apply Prettier formatting
+
+# Pre-commit hooks (optioneel)
+pip install pre-commit
+pre-commit install
 ```
 
 ### Docker Deployment
@@ -191,6 +208,10 @@ Bijdragen zijn welkom! Areas voor verbetering:
 3. Test alle functies in `test.html`
 4. Update documentatie bij wijzigingen
 5. Volg bestaande code conventions
+6. Gebruik ESLint en Prettier voor code quality
+7. Maak gebruik van pre-commit hooks
+
+**Zie [CONTRIBUTING.md](CONTRIBUTING.md) voor uitgebreide ontwikkel-instructies.**
 
 ## 📄 Licentie
 

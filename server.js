@@ -2,7 +2,6 @@
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
-const url = require('url');
 
 const PORT = process.env.PORT || 8000;
 
@@ -25,9 +24,9 @@ function getMimeType(filePath) {
 }
 
 const server = http.createServer((req, res) => {
-    const parsedUrl = url.parse(req.url);
+    const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
     const pathname = parsedUrl.pathname;
-    
+
     // Health check endpoint
     if (pathname === '/health') {
         res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -38,7 +37,7 @@ const server = http.createServer((req, res) => {
         }));
         return;
     }
-    
+
     // Determine file path
     let filePath;
     if (pathname === '/') {
@@ -46,14 +45,14 @@ const server = http.createServer((req, res) => {
     } else {
         filePath = path.join(__dirname, pathname);
     }
-    
+
     // Security check - prevent directory traversal
     if (!filePath.startsWith(__dirname)) {
         res.writeHead(403);
         res.end('Forbidden');
         return;
     }
-    
+
     // Check if file exists
     fs.access(filePath, fs.constants.F_OK, (err) => {
         if (err) {
@@ -61,7 +60,7 @@ const server = http.createServer((req, res) => {
             res.end('File not found');
             return;
         }
-        
+
         // Read and serve the file
         fs.readFile(filePath, (err, data) => {
             if (err) {
@@ -69,7 +68,7 @@ const server = http.createServer((req, res) => {
                 res.end('Server error');
                 return;
             }
-            
+
             const mimeType = getMimeType(filePath);
             res.writeHead(200, { 'Content-Type': mimeType });
             res.end(data);
