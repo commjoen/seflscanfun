@@ -1,6 +1,6 @@
 {
   "name": "seflscanfun",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Albert Heijn Zelfscanner Simulatie - Een interactieve self-scanner ervaring",
   "engines": {
     "node": ">=24.0.0"
