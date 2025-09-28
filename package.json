@@ -25,11 +25,11 @@
   },
   "devDependencies": {
     "jsdom": "^27.0.0",
-    "eslint": "^8.57.1",
+    "eslint": "^9.36.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.30.0",
-    "eslint-plugin-n": "^16.6.2",
-    "eslint-plugin-promise": "^6.6.0",
+    "eslint-plugin-n": "^17.23.1",
+    "eslint-plugin-promise": "^7.2.1",
     "prettier": "^3.3.3"
   }
 }
