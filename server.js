@@ -1,11 +1,7 @@
 // Simple Node.js HTTP server for Albert Heijn Self-Scanner - no dependencies
-import http from 'http';
-import path from 'path';
-import fs from 'fs';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const http = require('http');
+const path = require('path');
+const fs = require('fs');
 
 const PORT = process.env.PORT || 8000;
 

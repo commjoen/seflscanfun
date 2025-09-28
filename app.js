@@ -784,7 +784,7 @@ class SelfScannerApp {
     }
 
     getAllProductsArray() {
-        return Object.entries(products).map(([barcode, product]) => ({
+        return Object.entries(PRODUCTS_DATABASE).map(([barcode, product]) => ({
             barcode,
             ...product
         }));

@@ -21,10 +21,9 @@ function displayVersionInfo() {
 }
 
 // Export for use in other modules
-export default APP_VERSION;
-
-// Also export individual elements for convenience
-export { displayVersionInfo };
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = APP_VERSION;
+}
 
 // Auto-display version when DOM is loaded
 if (typeof document !== 'undefined') {
