@@ -24,8 +24,8 @@
     "express": "^5.2.1"
   },
   "devDependencies": {
-    "jsdom": "^27.2.0",
-    "eslint": "^9.39.1",
+    "jsdom": "^27.3.0",
+    "eslint": "^9.39.2",
     "neostandard": "^0.12.2",
     "prettier": "^3.7.4"
   }
