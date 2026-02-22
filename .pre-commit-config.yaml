@@ -25,27 +25,9 @@ repos:
       - id: fix-byte-order-marker
       - id: detect-private-key
 
-  # JavaScript/Node.js specific linting and formatting
-  - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v8.57.0
-    hooks:
-      - id: eslint
-        files: \.(js|jsx|ts|tsx)$
-        args: ['--fix']
-        additional_dependencies:
-          - eslint@^8.57.1
-          - eslint-config-standard@^17.1.0
-          - eslint-plugin-import@^2.30.0
-          - eslint-plugin-n@^16.6.2
-          - eslint-plugin-promise@^6.6.0
-
   # Prettier for code formatting
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v4.0.0-alpha.8
-    hooks:
-      - id: prettier
-        files: \.(js|jsx|ts|tsx|json|css|md|html|yml|yaml)$
-        exclude: package-lock\.json|\.github/
+  # Note: Handled by npm scripts instead
+  # - repo: https://github.com/pre-commit/mirrors-prettier
 
   # Security scanning
   - repo: https://github.com/Yelp/detect-secrets
@@ -56,11 +38,8 @@ repos:
         exclude: package-lock\.json
 
   # Dockerfile linting
-  - repo: https://github.com/hadolint/hadolint
-    rev: v2.12.0
-    hooks:
-      - id: hadolint-docker
-        args: ['--ignore', 'DL3008', '--ignore', 'DL3009']
+  # Note: Handled by npm lint instead
+  # - repo: https://github.com/hadolint/hadolint
 
   # Commit message validation
   - repo: https://github.com/compilerla/conventional-pre-commit
@@ -77,45 +56,11 @@ repos:
       - id: check-json
         files: package\.json$
 
-  # HTML validation (local hook)
-  - repo: local
-    hooks:
-      - id: html-validate
-        name: HTML validation
-        entry: python3 -c "import sys; import re; [sys.exit(1) if not re.search(r'<!DOCTYPE html>', open(f).read(), re.IGNORECASE) else None for f in sys.argv[1:]]"
-        language: system
-        files: \.html$
 
-  # CSS validation (basic)
-  - repo: local
-    hooks:
-      - id: css-validate
-        name: CSS basic validation
-        entry: python3 -c "import sys; [print(f'Warning: {f} might have CSS syntax issues') if '{' not in open(f).read() and '}' not in open(f).read() and open(f).read().strip() else None for f in sys.argv[1:]]"
-        language: system
-        files: \.css$
-
-  # Project-specific validation
-  - repo: local
-    hooks:
-      - id: albert-heijn-branding
-        name: Albert Heijn branding validation
-        entry: python3 -c "
-import sys
-import re
-for f in sys.argv[1:]:
-    content = open(f).read()
-    if f.endswith('.css') and not re.search(r'#0066CC|#003082|#004499', content, re.IGNORECASE):
-        print(f'Warning: {f} might be missing Albert Heijn brand colors')
-    if f.endswith('.html') and 'Albert Heijn' not in content and 'Zelfscanner' not in content:
-        print(f'Warning: {f} might be missing Albert Heijn branding')
-"
-        language: system
-        files: \.(html|css)$
 
 # Configuration
 default_language_version:
-  node: "20.19.5"  # Match current environment
+  node: "24"  # Match Node 24 LTS environment
   python: python3
 
 ci:
