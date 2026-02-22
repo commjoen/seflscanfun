@@ -17,6 +17,7 @@ export default [
                 // Albert Heijn Self-Scanner specific globals
                 SelfScannerApp: 'readonly',
                 products: 'readonly',
+                PRODUCTS_DATABASE: 'readonly',
                 findProductByBarcode: 'readonly',
                 getRandomProducts: 'readonly',
                 searchProductsByName: 'readonly',

@@ -1,5 +1,6 @@
 # Albert Heijn Self-Scanner Docker Image - using Node.js instead of Python
-FROM node:25-alpine AS production
+# Using Node 24 LTS with Alpine 3.20 for stability and security
+FROM node:24-alpine3.20 AS production
 
 # Set working directory
 WORKDIR /app
