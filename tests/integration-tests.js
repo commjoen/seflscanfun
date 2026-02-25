@@ -17,7 +17,7 @@ class SimplifiedAppTester {
             fn();
             this.testResults.push({ name, status: 'PASS' });
             this.passCount++;
-        } catch (error) {
+        } catch(error) {
             this.testResults.push({ name, status: 'FAIL', error: error.message });
             this.failCount++;
         }

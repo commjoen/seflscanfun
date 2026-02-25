@@ -598,7 +598,7 @@ class SelfScannerApp {
             startBtn.style.display = 'none';
             stopBtn.style.display = 'block';
             this.updateCameraStatus('Richt uw camera op een barcode...');
-        } catch (error) {
+        } catch(error) {
             console.error('Camera error:', error);
             this.updateCameraStatus('Kan camera niet starten. Controleer toestemmingen.');
             document.getElementById('startCamera').disabled = false;
@@ -859,7 +859,7 @@ class SelfScannerApp {
 
 // Initialize app when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    // eslint-disable-next-line no-new
+
     new SelfScannerApp();
 });
 

@@ -1,17 +1,12 @@
 // ESLint configuration for Albert Heijn Self-Scanner project
-// Using the new flat config format with neostandard
-import neostandard from 'neostandard';
+// Using the new flat config format with @stylistic/eslint-plugin
+import stylistic from '@stylistic/eslint-plugin';
 
 export default [
-    ...neostandard({
-        // Override neostandard's stylistic preferences to match existing code style
-        stylistic: {
-            indent: 4,
-            semi: true,
-            quotes: 'single'
-        }
-    }),
     {
+        plugins: {
+            '@stylistic': stylistic
+        },
         languageOptions: {
             globals: {
                 // Albert Heijn Self-Scanner specific globals
