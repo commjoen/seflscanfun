@@ -24,9 +24,11 @@
     "express": "^5.2.1"
   },
   "devDependencies": {
-    "eslint": "^9.39.4",
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "eslint": "^10.2.1",
+    "globals": "^17.5.0",
     "jsdom": "^27.4.0",
-    "neostandard": "^0.13.0",
     "prettier": "^3.8.3"
   }
 }

@@ -1,19 +1,19 @@
 // ESLint configuration for Albert Heijn Self-Scanner project
-// Using the new flat config format with neostandard
-import neostandard from 'neostandard';
+// Using the new flat config format with @eslint/js + @stylistic/eslint-plugin
+import js from '@eslint/js';
+import stylistic from '@stylistic/eslint-plugin';
+import globals from 'globals';
 
 export default [
-    ...neostandard({
-        // Override neostandard's stylistic preferences to match existing code style
-        stylistic: {
-            indent: 4,
-            semi: true,
-            quotes: 'single'
-        }
-    }),
+    js.configs.recommended,
     {
+        plugins: {
+            '@stylistic': stylistic
+        },
         languageOptions: {
             globals: {
+                // Browser globals (default for all browser-facing files)
+                ...globals.browser,
                 // Albert Heijn Self-Scanner specific globals
                 SelfScannerApp: 'readonly',
                 products: 'readonly',
@@ -85,6 +85,8 @@ export default [
         files: ['test*.js', 'tests/**/*.js'],
         languageOptions: {
             globals: {
+                // Node.js globals for test files
+                ...globals.node,
                 // Test-specific globals
                 describe: 'readonly',
                 it: 'readonly',
@@ -100,6 +102,12 @@ export default [
     },
     {
         files: ['server.js', 'test-runner.js'],
+        languageOptions: {
+            globals: {
+                // Node.js globals for server/runner files
+                ...globals.node
+            }
+        },
         rules: {
             'no-console': 'off' // Allow console in server files
         }
