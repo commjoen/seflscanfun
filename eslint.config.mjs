@@ -12,7 +12,7 @@ export default [
         },
         languageOptions: {
             globals: {
-                // Browser globals for app.js, products.js, sw.js etc.
+                // Browser globals (default for all browser-facing files)
                 ...globals.browser,
                 // Albert Heijn Self-Scanner specific globals
                 SelfScannerApp: 'readonly',
