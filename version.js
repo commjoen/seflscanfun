@@ -2,9 +2,9 @@
 // This version is automatically updated by release workflows
 
 const APP_VERSION = {
-    version: "1.1.56",
-    buildDate: "2026-11-12",
-    gitCommit: "bef1dd9",
+    version: "1.1.57",
+    buildDate: "2026-11-16",
+    gitCommit: "2a08a91",
     environment: "production"
 };
 
